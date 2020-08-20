@@ -140,7 +140,6 @@ public class Utils {
 			while ((nextRecord = csvReader.readNext()) != null) { 
 	            parentRiskMap.put(nextRecord[0], convertStringToList(nextRecord[1]));
 	        } 
-			Set keySet = parentRiskMap.keySet();
 			for(Entry<String, List<String>> entry: parentRiskMap.entrySet()) {
 				allRisks.add(new Risk(entry.getKey()));
 			}
@@ -154,19 +153,49 @@ public class Utils {
 				}
 			}
 			
+			return allRisks;
+			
 		} catch (Exception e) {
 			System.out.println(e);
 		}
+		
 		return null;
 	}
 	public static List<Risk> convertToParentRiskList(List<String> strParentList,List<Risk> risks){
 		return risks.stream().filter(risk -> strParentList.contains(risk.getId())).collect(Collectors.toList());
 	}
+	public static void readRiskDistribution(String path,List<Risk> risks){
+		try {
+			FileReader fileReader = new FileReader(path);
+			CSVReader csvReader = new CSVReaderBuilder(fileReader)
+                    .build(); 
+			String [] nextRecord;
+			Map<String,List<Double>> probMap = new HashMap<String,List<Double>>();
+			while ((nextRecord = csvReader.readNext()) != null) { 
+				ArrayList<Double> childList = new ArrayList<Double>();
+	            for(int i=1;i<nextRecord.length;i++) {
+	            	childList.add(Double.parseDouble(nextRecord[i]));
+	            	
+	            }
+	            probMap.put(nextRecord[0], childList);
+	            } 
+			for(Risk risk:risks) {
+				risk.setProbability(probMap.get(risk.getId()));
+			}
+			
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
 	public static void main(String args[]) {
 //		List<Task> tasks = Utils.readTaskListInfo(Configuaration.inputPath+"0.csv");
 //		List<Task> criticlePath = Pert.excute(tasks);
 //		Pert.showCriticalPath(criticlePath);
-		Utils.readRiskRelationInfo(Configuaration.inputPath+"risk_relation.csv");
+		
+		List<Risk> allRisks = Utils.readRiskRelationInfo(Configuaration.inputPath+"risk_relation.csv");
+//		FakeDb.generateRiskDistribution(allRisks);
+		Utils.readRiskDistribution(Configuaration.inputPath+"risk_distribution.csv", allRisks);
+		System.out.println();
 	}
 
 }
