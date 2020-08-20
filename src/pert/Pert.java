@@ -22,12 +22,16 @@ public class Pert {
 	}
 
 	public static List<Task> excute(List<Task> tasks) {
+		Pert.prepareExcute(tasks);
 		return tasks.stream().filter(t -> t.getSlack() == 0).collect(Collectors.toList());
 	}
 
 	public static void showCriticalPath(List<Task> criticlePath) {
 		System.out.println("Criticle Path");
-		criticlePath.forEach(entry -> System.out.println(entry.getName() + " "));
+		criticlePath.forEach(p->{
+			System.out.print(p.getName()+ "--> ");
+		});
+		System.out.println();
 	}
 
 	public static void prepareExcute(List<Task> tasks) {

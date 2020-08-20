@@ -9,5 +9,6 @@
 	<classpathentry kind="lib" path="C:/Users/Bugger485/Desktop/commons-math3-3.6.1.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Bugger485/Desktop/commons-lang3-3.11/commons-lang3-3.11.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Bugger485/Downloads/opencsv-5.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Bugger485/Downloads/bayesserver-9.2-bin/bayesserver-9.2/Java/bayesserver-9.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

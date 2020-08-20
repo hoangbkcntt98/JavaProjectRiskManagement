@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.math3.special.Erf;
@@ -14,7 +16,7 @@ import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 
 import config.Configuaration;
-import pert.Pert;
+import project.Risk;
 import project.Task;
 public class Utils {
 	List<String> getListFromString(String str) {
@@ -126,11 +128,45 @@ public class Utils {
 		}		
 		return tasks;
 	}
+	public static List<Risk> readRiskRelationInfo(String path) {
+		List<Risk> allRisks = new ArrayList<Risk>();
+		Map<String,List<String>> parentRiskMap = new HashMap<String,List<String>>();
+		try {
+			FileReader fileReader = new FileReader(path);
+			CSVReader csvReader = new CSVReaderBuilder(fileReader) 
+                    .withSkipLines(1) 
+                    .build(); 
+			String [] nextRecord;
+			while ((nextRecord = csvReader.readNext()) != null) { 
+	            parentRiskMap.put(nextRecord[0], convertStringToList(nextRecord[1]));
+	        } 
+			Set keySet = parentRiskMap.keySet();
+			for(Entry<String, List<String>> entry: parentRiskMap.entrySet()) {
+				allRisks.add(new Risk(entry.getKey()));
+			}
+			Collections.sort(allRisks,(r1,r2)->{
+				return Integer.parseInt(r1.getId())-Integer.parseInt(r2.getId());
+			});
+			for(Risk risk:allRisks) {
+				List<String>strParent = parentRiskMap.get(risk.getId());
+				if(Integer.parseInt(strParent.get(0))!=0) {
+					risk.setParentRisk(convertToParentRiskList(strParent, allRisks));
+				}
+			}
+			
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return null;
+	}
+	public static List<Risk> convertToParentRiskList(List<String> strParentList,List<Risk> risks){
+		return risks.stream().filter(risk -> strParentList.contains(risk.getId())).collect(Collectors.toList());
+	}
 	public static void main(String args[]) {
-		List<Task> tasks = Utils.readTaskListInfo(Configuaration.inputPath+"0.csv");
-		Pert.prepareExcute(tasks);
-		List<Task> criticlePath = Pert.excute(tasks);
-		Pert.showCriticalPath(criticlePath);
+//		List<Task> tasks = Utils.readTaskListInfo(Configuaration.inputPath+"0.csv");
+//		List<Task> criticlePath = Pert.excute(tasks);
+//		Pert.showCriticalPath(criticlePath);
+		Utils.readRiskRelationInfo(Configuaration.inputPath+"risk_relation.csv");
 	}
 
 }
