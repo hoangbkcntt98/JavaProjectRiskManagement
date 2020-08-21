@@ -10,7 +10,6 @@
 	<classpathentry kind="lib" path="C:/Users/Bugger485/Desktop/commons-lang3-3.11/commons-lang3-3.11.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Bugger485/Downloads/opencsv-5.2.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Bugger485/Downloads/bayesserver-9.2-bin/bayesserver-9.2/Java/bayesserver-9.2.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Bugger485/Downloads/jar_files/nd4j-api-1.0.0-beta7.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Bugger485/Downloads/jar_files/nd4j-common-1.0.0-beta7.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Bugger485/Downloads/library/guava-1.0.0-beta7.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -19,11 +19,8 @@ public class RiskModel {
 			BayesianNetwork bayesNet = new BayesianNetwork("bayesNet of risk " + r.getId());
 			
 			if(r.getParentRisk()!=null) {
-				List<Risk> bayesRiskList = new ArrayList<Risk>();
-				List<Double> bayesDis = r.getProbabilityList();
-				bayesRiskList.addAll(r.getParentRisk());
-				bayesRiskList.add(r);
-				bayesNet.excute(r);
+				
+				r.setProbability(bayesNet.excute(r));
 				
 			}else {
 				r.setProbability(r.getProbabilityList().get(0));

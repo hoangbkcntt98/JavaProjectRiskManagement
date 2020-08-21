@@ -58,7 +58,7 @@ public class BayesianNetwork {
 	public State getNodeState(Node node,String state) {
 		return node.getVariables().get(0).getStates().get(state);
 	}
-	public void excute(Risk risk) {
+	public double excute(Risk risk) {
 		List<String> nodes = new ArrayList<String>();
 		List<Double> probList = risk.getProbabilityList();
 		risk.getParentRisk().forEach(r->{
@@ -108,23 +108,29 @@ public class BayesianNetwork {
 		QueryOutput queryOutput = factory.createQueryOutput();
 		Table queryChild = new Table(getNode(child));
 		inference.getQueryDistributions().add(queryChild);
-		for(int a=0;a<matTF[0].length;a++)
+		double probParent = 1;
+		System.out.println("length [0]"+matTF.length);
+		for(int a=0;a<matTF.length;a++)
 		{
 			for(int b=0;b<matTF[1].length;b++) {
 				inference.getEvidence().setState(matTF[a][b]);
+				if(matTF[a][b].getName()=="True") { 
+					probParent*=risk.getParentRisk().get(b).getProbability();
+				}else {
+					probParent*=(1-risk.getParentRisk().get(b).getProbability());
+				}
+	
+				
 			}
 			try {
 				inference.query(queryOptions, queryOutput);
-				System.out.println(queryChild.get(getNodeState(getNode(child), "True")));
+				return queryChild.get(getNodeState(getNode(child), "True"))*probParent;
 			} catch (InconsistentEvidenceException e) {
 				e.printStackTrace();
 			}
 			
 		}
-		
-		
-		
-		
+		return 0;
 	}
 
 }
