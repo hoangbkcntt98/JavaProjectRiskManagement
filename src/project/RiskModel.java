@@ -3,12 +3,36 @@ package project;
 import java.util.ArrayList;
 import java.util.List;
 
+import bayesian_network.BayesianNetwork;
 import utils.Utils;
 
 public class RiskModel {
 	public List<Risk> risks;
 	public RiskModel(List<Risk> risks) {
 		this.risks = risks;
+	}
+	public void calcProb() {
+		this.risks = getOrder();
+		double [] listProb ;
+		for(Risk r:risks) {
+			
+			BayesianNetwork bayesNet = new BayesianNetwork("bayesNet of risk " + r.getId());
+			
+			if(r.getParentRisk()!=null) {
+				List<Risk> bayesRiskList = new ArrayList<Risk>();
+				List<Double> bayesDis = r.getProbabilityList();
+				bayesRiskList.addAll(r.getParentRisk());
+				bayesRiskList.add(r);
+				bayesNet.excute(r);
+				
+			}else {
+				r.setProbability(r.getProbabilityList().get(0));
+			}
+//			
+//			System.out.println(BayesListRisk);
+//			System.out.println("\\");
+		}
+		
 	}
 	public List<Risk> getOrder(){
 		List<Risk> riskListOrdered = new ArrayList<Risk>();

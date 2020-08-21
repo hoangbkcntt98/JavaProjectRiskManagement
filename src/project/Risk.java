@@ -8,6 +8,7 @@ public class Risk {
 	public String Id;
 	public List<Double> probabilityList;
 	public List<Node> nodes;
+	public double probability;
 	public Risk(String Id,List<Risk> parentRisk,List<Node> nodes) {
 		this.Id = Id;
 		this.parentRisk = parentRisk;
@@ -38,6 +39,13 @@ public class Risk {
 	public void setProbabilityList(List<Double> probability) {
 		this.probabilityList = probability;
 	}
+	public double getProbability() {
+		return probability;
+	}
+	public void setProbability(double probability) {
+		this.probability = probability;
+	}
+	
 	
 
 }

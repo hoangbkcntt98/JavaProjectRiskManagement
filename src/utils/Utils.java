@@ -249,7 +249,8 @@ public class Utils {
 //		FakeDb.generateRiskDistribution(allRisks);
 		Utils.readRiskDistribution(Configuaration.inputPath+"risk_distribution.csv", allRisks);
 		RiskModel riskModel = new RiskModel(allRisks);
-		allRisks = riskModel.getOrder();
+		riskModel.calcProb();
+		
 		System.out.println();
 	}
 
