@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.math3.special.Erf;
@@ -17,6 +16,7 @@ import com.opencsv.CSVReaderBuilder;
 
 import config.Configuaration;
 import project.Risk;
+import project.RiskModel;
 import project.Task;
 public class Utils {
 	List<String> getListFromString(String str) {
@@ -180,11 +180,64 @@ public class Utils {
 	            probMap.put(nextRecord[0], childList);
 	            } 
 			for(Risk risk:risks) {
-				risk.setProbability(probMap.get(risk.getId()));
+				risk.setProbabilityList(probMap.get(risk.getId()));
 			}
 			
 		} catch (Exception e) {
 			System.out.println(e);
+		}
+	}
+	public static int [][] matrix(int row,int column,int value){
+		int [][] mat = new int[row][column];
+		for(int i=0;i<row;i++)
+		{
+			for(int j=0;j<column;j++)
+			{
+				mat[i][j] = value;
+			}
+		}
+		return mat;
+	}
+	public static int[] getProb(int [][] mat) {
+		int [] prob = new int [mat[0].length];
+		Arrays.fill(prob, 1);
+		for(int i=0;i<mat[0].length;i++) {
+			int probArray =1;
+			for(int j=0;j<mat[1].length;j++) {
+				probArray *= mat[i][j];
+			}
+			prob[i] = probArray;
+		}
+		return prob;
+	}
+	public static List<Risk> riskNeedUpdateBefore(List<Risk> risks,int [] prob){
+		
+		return risks.stream().filter(r-> prob[Integer.parseInt(r.getId())-1]==1).collect(Collectors.toList());
+	}
+	public static void updateMatrix(List<Risk> nodeUpdates,int [][] matrix,int[] prob) {
+		nodeUpdates.stream().filter(r->prob[Integer.parseInt(r.getId())-1]==1).forEach(entry->{
+			setValueCol(matrix,Integer.parseInt(entry.getId())-1, 1);
+			setValueRow(matrix,Integer.parseInt(entry.getId())-1, 0);
+		});
+	}
+	public static void setValueRow(int [][] mat,int row,int value) {
+		for(int i=0;i<mat[0].length;i++) {
+			if(i==row) {
+				for(int j=0;j<mat[1].length;j++) {
+					mat[i][j] = value;
+				}
+			}
+			
+		}
+	}
+	public static void setValueCol(int [][] mat,int col,int value) {
+		for(int i=0;i<mat[1].length;i++) {
+			if(i==col) {
+				for(int j=0;j<mat[0].length;j++) {
+					mat[j][i] = value;
+				}
+			}
+			
 		}
 	}
 	public static void main(String args[]) {
@@ -195,6 +248,8 @@ public class Utils {
 		List<Risk> allRisks = Utils.readRiskRelationInfo(Configuaration.inputPath+"risk_relation.csv");
 //		FakeDb.generateRiskDistribution(allRisks);
 		Utils.readRiskDistribution(Configuaration.inputPath+"risk_distribution.csv", allRisks);
+		RiskModel riskModel = new RiskModel(allRisks);
+		allRisks = riskModel.getOrder();
 		System.out.println();
 	}
 

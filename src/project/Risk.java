@@ -6,7 +6,7 @@ import com.bayesserver.Node;
 public class Risk {
 	public List<Risk> parentRisk;
 	public String Id;
-	public List<Double> probability;
+	public List<Double> probabilityList;
 	public List<Node> nodes;
 	public Risk(String Id,List<Risk> parentRisk,List<Node> nodes) {
 		this.Id = Id;
@@ -20,11 +20,6 @@ public class Risk {
 	public Risk(String Id) {
 		this.Id = Id;
 	}
-	public double caculateProbability()
-	{
-		
-		return -1;
-	}
 	public List<Risk> getParentRisk() {
 		return parentRisk;
 	}
@@ -37,11 +32,11 @@ public class Risk {
 	public void setId(String id) {
 		Id = id;
 	}
-	public List<Double> getProbability() {
-		return probability;
+	public List<Double> getProbabilityList() {
+		return probabilityList;
 	}
-	public void setProbability(List<Double> probability) {
-		this.probability = probability;
+	public void setProbabilityList(List<Double> probability) {
+		this.probabilityList = probability;
 	}
 	
 
